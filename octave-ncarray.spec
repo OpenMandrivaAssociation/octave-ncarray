@@ -2,12 +2,12 @@
 
 Summary:	Access NetCDF files as a multi-dimensional array with Octave
 Name:		octave-%{octpkg}
-Version:	1.0.4
+Version:	1.0.5
 Release:	1
-Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
+Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		https://octave.sourceforge.io/%{octpkg}/
+Url:		https://packages.octave.org/%{octpkg}/
 BuildArch:	noarch
 
 BuildRequires:	octave-devel >= 3.4.0
@@ -24,8 +24,6 @@ Requires(postun): octave
 %description
 Access a single or a collection of NetCDF files as a multi-dimensional 
 array.
-
-This package is part of external Octave-Forge collection.
 
 %files
 %license COPYING
