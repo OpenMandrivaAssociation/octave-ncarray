@@ -1,0 +1,70 @@
+From fc0ac5468236e1ee2a213a42f3656a629375c388 Mon Sep 17 00:00:00 2001
+From: JohnD <john.donoghue@ieee.org>
+Date: Fri, 16 Dec 2022 11:05:27 -0500
+Subject: [PATCH 1/1] use mean, var instead of nanmean, nanvar if not available
+
+---
+ inst/test_ncarray.m     |  6 +++++-
+ inst/test_ncarray_nan.m | 18 +++++++++++++++---
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/inst/test_ncarray.m b/inst/test_ncarray.m
+index 0cef91e..77ea5fe 100644
+--- a/inst/test_ncarray.m
++++ b/inst/test_ncarray.m
+@@ -104,7 +104,11 @@ function test_ncarray()
+   % sum
+ 
+   nanmeanSST = nanmean(SST);
+-  nanmeanSSTref = nanmean(SST_ref);
++  if exist ("nanmean")
++    nanmeanSSTref = nanmean(SST_ref);
++  else
++    nanmeanSSTref = mean(SST_ref, 'omitnan');
++  endif
+   assertAlmostEqual(nanmeanSST, nanmeanSSTref)
+ 
+   %momentSST = moment(SST,2,1);
+diff --git a/inst/test_ncarray_nan.m b/inst/test_ncarray_nan.m
+index 1f6bf97..97a36b2 100644
+--- a/inst/test_ncarray_nan.m
++++ b/inst/test_ncarray_nan.m
+@@ -39,7 +39,11 @@ end
+ 
+ data = ncCatArray(3,files,varname);
+ reddata = nanmean(data,3);
+-reddataref = nanmean(dataref,3);
++if exist ("nanmean")
++  reddataref = nanmean(dataref,3);
++else
++  reddataref = mean(dataref,3, 'omitnan');
++endif
+ assertAlmostEqual(reddata, reddataref)
+ 
+ reddata = nansum(data,3);
+@@ -47,12 +51,20 @@ reddataref = nansum(dataref,3);
+ assertAlmostEqual(reddata, reddataref)
+ 
+ reddata = nanvar(data,[],3);
+-reddataref = nanvar(dataref,[],3);
++if exist ("nanvar")
++  reddataref = nanvar(dataref,[],3);
++else
++  reddataref = var(dataref,[],3, 'omitnan');
++endif
+ diff = reddata - reddataref;
+ assert(max(diff(:)) < 1e-6)
+ 
+ reddata = nanstd(data,[],3);
+-reddataref = nanstd(dataref,[],3);
++if exist ("nanstd")
++  reddataref = nanstd(dataref,[],3);
++else
++  reddataref = std(dataref,[],3, 'omitnan');
++endif
+ diff = reddata - reddataref;
+ assert(max(diff(:)) < 1e-6)
+ 
+-- 
+2.40.0.rc2
+

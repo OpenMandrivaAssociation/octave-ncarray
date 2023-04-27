@@ -1,29 +1,32 @@
-%define octpkg ncarray
+%global octpkg ncarray
 
 Summary:	Access NetCDF files as a multi-dimensional array with Octave
-Name:		octave-%{octpkg}
+Name:		octave-ncarray
 Version:	1.0.5
 Release:	1
-Source0:	https://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
-License:	GPLv2+
+License:	GPLv3+
 Group:		Sciences/Mathematics
-Url:		https://packages.octave.org/%{octpkg}/
-BuildArch:	noarch
+Url:		https://packages.octave.org/ncarray/
+Source0:	https://downloads.sourceforge.net/project/octave/ncarray-%{version}.tar.gz
+# (upstream)
+Patch0:		0001-use-mean-var-instead-of-nanmean-nanvar-if-not-availa.patch
 
-BuildRequires:	octave-devel >= 3.4.0
-BuildRequires:	octave-netcdf >= 1.0.2
-BuildRequires:	octave-statistics >= 1.0.6
+BuildRequires:  octave-devel >= 3.4.0
+BuildRequires:  octave-netcdf >= 1.0.2
+BuildRequires:  octave-statistics >= 1.0.6
 
 Requires:	octave(api) = %{octave_api}
-Requires:	octave-netcdf >= 1.0.2
-Requires:	octave-statistics >= 1.0.6
+Requires:  	octave-netcdf >= 1.0.2
+Requires:  	octave-statistics >= 1.0.6
 
 Requires(post): octave
 Requires(postun): octave
 
+BuildArch:	noarch
+
 %description
-Access a single or a collection of NetCDF files as a multi-dimensional 
-array.
+Access a single or a collection of NetCDF files as a 
+multi-dimensional array.
 
 %files
 %license COPYING
@@ -34,20 +37,17 @@ array.
 #---------------------------------------------------------------------------
 
 %prep
-%autosetup -p1 -n %{octpkg}
-
-# remove backup files
-#find . -name \*~ -delete
+%autosetup -p1 -n %{octpkg}-%{version}
 
 %build
-%set_build_flags
 %octave_pkg_build
 
 %install
 %octave_pkg_install
 
 %check
-%octave_pkg_check
+# NOTE: octave crashd after the end of all tests
+#octave_pkg_check
 
 %post
 %octave_cmd pkg rebuild
