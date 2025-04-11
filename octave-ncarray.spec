@@ -3,7 +3,7 @@
 Summary:	Access NetCDF files as a multi-dimensional array with Octave
 Name:		octave-ncarray
 Version:	1.0.6
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://packages.octave.org/ncarray/
